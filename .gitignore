@@ -1,0 +1,8 @@
+##Azure publishsettings file
+
+*.publishsettings
+
+##webstorm ide files
+.idea/
+
+
