@@ -1,1 +1,0 @@
-place your azure credentials file in this folder
