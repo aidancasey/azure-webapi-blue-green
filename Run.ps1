@@ -7,9 +7,9 @@ $ScriptDirectory = Split-Path $MyInvocation.MyCommand.Path
 
 Function Create-New-Stack()
 {
-    $resourceGroupName = "ADCommonStack"
-    $templateFile = $PSScriptRoot + "\azuredeploy.json"
-    $templateParams = $PSScriptRoot + "\azuredeploy-parameters.json"
+    $resourceGroupName = "CustomerServiceStack"
+    $templateFile = $PSScriptRoot + "\webapi-deploy.json"
+    $templateParams = $PSScriptRoot + "\webapi-deploy-parameters.json"
     $region ="North Europe"
 
     Create-Stack $resourceGroupName $templateFile $templateParams $region
@@ -17,34 +17,29 @@ Function Create-New-Stack()
     Add-Staging-Slot
 }
 
-Function DeploySchema()
+Function Deploy-DB-Schema()
 {
     #add firewall rule to connect from this pc to the db
 
     $dbServer = "tcp:aidandbq4.database.windows.net,1433"
-    $dbName = "ADCommon"
-    $user = "aidan"
+    $dbName = "CustomerDB"
+    $user = "dbuser"
     $password = "Fooboohoo12345"
     $ipAddress = Get-MyPublicIP
-    GrantFirewallAccessToDatabase "aidandbq4" $ipAddress
-
-    #run the db upgrade tool
-
- #   $pathtoUpgradeExe = $PSScriptRoot + "\build artefacts\DBUpgrade\MYOB.AD.DbUpgrade.exe"
- #   UpgradeDatabaseSchema $pathtoUpgradeExe $dbServer $dbName $user $password
+    GrantFirewallAccessToDatabase "CustomerDB" $ipAddress
 }
 
 Function Deploy-Web-App()
 {
-   $pathToDeployPackage = $PSScriptRoot + "\build artefacts\web\MYOB.Server.API.zip"
-   $websiteName = "AidanADCommon"
+   $pathToDeployPackage = $PSScriptRoot + "\build artefacts\web\v1.zip"
+   $websiteName = "CustomerService"
    Publish-Website $websiteName $pathToDeployPackage
 }
 
 Function DeployV2ToStage()
 {
    $pathToDeployPackage = $PSScriptRoot + "\build artefacts\web\v2.zip"
-   $websiteName = "AidanADCommon"
+   $websiteName = "CustomerService"
 
    Stage-Website $websiteName $pathToDeployPackage
 }
@@ -52,31 +47,30 @@ Function DeployV2ToStage()
 
 function Add-Staging-Slot()
 {
-    Add-StagingSlot "AidanADCommon" "North Europe"
+    Add-StagingSlot "CustomerService" "North Europe"
 }
 
 function Swap()
 {
-    Swap-Website "AidanADCommon"
+    Swap-Website "CustomerService"
 }
 
 function DeleteEverything()
 {
-  Delete-ResourceGroup "ADCommonStack"
+  Delete-ResourceGroup "CustomerServiceStack"
 }
+
 
 # set azure account
 $filePath = $PSScriptRoot + "\credentials\trial.publishsettings"
 
-#SetSubscriptionInfo $filePath "Free Trial"
+SetSubscriptionInfo $filePath "Free Trial"
 
-#Create-New-Stack
+Create-New-Stack
+Deploy-Web-App
+Deploy-DB-Schema
+DeployV2ToStage
+Swap
 
-#Deploy-Web-App
-
-#DeployV2ToStage
-#Swap
-
-#DeploySchema
 
 #DeleteEverything
