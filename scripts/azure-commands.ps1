@@ -8,20 +8,13 @@
 function Create-Stack([string]$resourceGroupName, [string]$templateFile , [string]$templateParameterFile,[string]$location)
 {
     Switch-AzureMode -Name AzureResourceManager
-    Azure-New-AzureResourceGroup $resourceGroupName $location
-    Azure-New-AzureResourceGroupDeployment  $resourceGroupName  $templateFile  $templateParameterFile
+    New-AzureResourceGroup –Name $name –Location $location
+    New-AzureResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFile  -TemplateParameterFile $templateParameterFile
 }
 
-#need to wrap azure cmdlet so I can test with pester :(
-function Azure-New-AzureResourceGroup([string]$name, [string]$location)
-{
-     New-AzureResourceGroup –Name $name –Location $location
-}
 
-function Azure-New-AzureResourceGroupDeployment([string]$resourceGroupName, [string]$templateFile , [string]$templateParameterFile)
-{
-     New-AzureResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFile  -TemplateParameterFile $templateParameterFile
-}
+
+
 
 function GrantFirewallAccessToDatabase([string]$server, [string]$ipAddress)
 {

@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "siteName": {
-      "value": "AidanADCommon"
+      "value": "CustomerService"
     },
     "hostingPlanName": {
       "value": "NewServiceAppPlan"
@@ -14,21 +14,20 @@
     "sku": {
       "value": "Standard"
     },
-
     "serverName": {
-      "value": "aidandbq4"
+      "value": "mydatabaseserver"
     },
     "serverLocation": {
       "value": "North Europe"
     },
     "administratorLogin": {
-      "value": "aidan"
+      "value": "dbuser"
     },
     "administratorLoginPassword": {
-      "value": "Fooboohoo12345"
+      "value": "your-password"
     },
     "databaseName": {
-      "value": "ADCommon"
+      "value": "CustomerDatabase"
     }
   }
 }
